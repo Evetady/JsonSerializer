@@ -1,16 +1,26 @@
+import models.Person
+import models.TestData
+
 fun main() {
+    // Пример с классом Person
     val person = Person("John Doe", 35, "john.doe@example.com", listOf("Cycling", "Photography"))
 
-    // Сериализация
-    val jsonString = JsonSerializer.serialize(person)
-    println("Serialized JSON:")
-    println(jsonString)
+    println("Serialized Person:")
+    val personJson = JsonSerializer.serializePerson(person)
+    println(personJson)
 
-    // Десериализация
-    val deserializedPerson = JsonSerializer.deserialize<Person>(jsonString)
-    println("\nDeserialized object:")
+    val deserializedPerson = JsonSerializer.deserializePerson(personJson)
+    println("\nDeserialized Person:")
     println(deserializedPerson)
 
-    // Проверка равенства
-    println("\nOriginal and deserialized objects are equal: ${person == deserializedPerson}")
+    // Пример с классом TestData
+    val testData = TestData(42, "Test value", listOf("important", "kotlin"))
+
+    println("\nSerialized TestData:")
+    val testDataJson = JsonSerializer.serializeTestData(testData)
+    println(testDataJson)
+
+    val deserializedTestData = JsonSerializer.deserializeTestData(testDataJson)
+    println("\nDeserialized TestData:")
+    println(deserializedTestData)
 }

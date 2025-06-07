@@ -1,15 +1,10 @@
-import kotlinx.serialization.Serializable
+import kotlinx.serialization.SerializationStrategy
+import kotlinx.serialization.DeserializationStrategy
 import kotlinx.serialization.encodeToString
-import kotlinx.serialization.json.Json
 import kotlinx.serialization.decodeFromString
-
-@Serializable
-data class Person(
-    val name: String,
-    val age: Int,
-    val email: String? = null,
-    val hobbies: List<String> = emptyList()
-)
+import kotlinx.serialization.json.Json
+import models.Person
+import models.TestData
 
 object JsonSerializer {
     private val json = Json {
@@ -18,11 +13,27 @@ object JsonSerializer {
         isLenient = true
     }
 
-    fun <T> serialize(obj: T): String where T : Any {
-        return json.encodeToString(obj)
+    fun <T> serialize(obj: T, serializer: SerializationStrategy<T>): String {
+        return json.encodeToString(serializer, obj)
     }
 
-    inline fun <reified T> deserialize(jsonString: String): T {
+    fun <T> deserialize(jsonString: String, deserializer: DeserializationStrategy<T>): T {
+        return json.decodeFromString(deserializer, jsonString)
+    }
+
+    fun serializePerson(person: Person): String {
+        return json.encodeToString(person)
+    }
+
+    fun deserializePerson(jsonString: String): Person {
+        return json.decodeFromString(jsonString)
+    }
+
+    fun serializeTestData(testData: TestData): String {
+        return json.encodeToString(testData)
+    }
+
+    fun deserializeTestData(jsonString: String): TestData {
         return json.decodeFromString(jsonString)
     }
 }

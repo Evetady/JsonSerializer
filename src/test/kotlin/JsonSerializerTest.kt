@@ -1,31 +1,25 @@
-import kotlinx.serialization.Serializable
+import models.Person
+import models.TestData
 import kotlin.test.Test
 import kotlin.test.assertEquals
-
-@Serializable
-data class TestData(
-    val id: Int,
-    val value: String,
-    val tags: List<String> = emptyList()
-)
 
 class JsonSerializerTest {
     @Test
     fun `test serialize and deserialize Person`() {
         val person = Person("Alice", 30, "alice@example.com", listOf("Reading", "Hiking"))
 
-        val jsonString = JsonSerializer.serialize(person)
-        val deserializedPerson = JsonSerializer.deserialize<Person>(jsonString)
+        val jsonString = JsonSerializer.serializePerson(person)
+        val deserializedPerson = JsonSerializer.deserializePerson(jsonString)
 
         assertEquals(person, deserializedPerson)
     }
 
     @Test
-    fun `test serialize and deserialize with custom class`() {
+    fun `test serialize and deserialize TestData`() {
         val testData = TestData(1, "test value", listOf("tag1", "tag2"))
 
-        val jsonString = JsonSerializer.serialize(testData)
-        val deserializedData = JsonSerializer.deserialize<TestData>(jsonString)
+        val jsonString = JsonSerializer.serializeTestData(testData)
+        val deserializedData = JsonSerializer.deserializeTestData(jsonString)
 
         assertEquals(testData, deserializedData)
     }
@@ -35,7 +29,7 @@ class JsonSerializerTest {
         val jsonString = """{"name":"Bob","age":25}"""
         val expectedPerson = Person("Bob", 25)
 
-        val deserializedPerson = JsonSerializer.deserialize<Person>(jsonString)
+        val deserializedPerson = JsonSerializer.deserializePerson(jsonString)
 
         assertEquals(expectedPerson, deserializedPerson)
     }
@@ -44,8 +38,8 @@ class JsonSerializerTest {
     fun `test serialize with null field`() {
         val person = Person("Charlie", 40, null)
 
-        val jsonString = JsonSerializer.serialize(person)
-        val deserializedPerson = JsonSerializer.deserialize<Person>(jsonString)
+        val jsonString = JsonSerializer.serializePerson(person)
+        val deserializedPerson = JsonSerializer.deserializePerson(jsonString)
 
         assertEquals(person, deserializedPerson)
     }
